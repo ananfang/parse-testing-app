@@ -8,21 +8,21 @@
 
 import UIKit
 import Parse
+import ParseLiveQuery
 
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var messageObjects = [PFObject]()
     
+    var liveQueryClient: Client?
+    var subscription: Subscription<PFObject>?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let query = PFQuery(className: "Message")
-        query.order(byDescending: "createdAt")
-        
-        query.findObjectsInBackground().continueOnSuccessWith(executor: BFExecutor.mainThread(), block: { [weak self] task in
+        messageQuery().findObjectsInBackground().continueOnSuccessWith(executor: BFExecutor.mainThread(), block: { [weak self] task in
             guard let strongSelf = self else { return nil }
-            print(task.result)
             if let objects = task.result as? [PFObject] {
                 strongSelf.messageObjects = objects
                 strongSelf.tableView.reloadData()
@@ -36,6 +36,25 @@ class ViewController: UIViewController {
             
             return nil
         })
+        
+        liveQueryClient = ParseLiveQuery.Client(server: "wss://testingapp1256.back4app.io")
+        
+        subscription = liveQueryClient?.subscribe(messageQuery())
+        subscription?.handle(Event.created, { _, message in
+            DispatchQueue.main.async { [weak self] in
+                guard let strongSelf = self else { return }
+                
+                strongSelf.messageObjects.insert(message, at: 0)
+                strongSelf.tableView.reloadData()
+            }
+        })
+    }
+    
+    func messageQuery() -> PFQuery<PFObject> {
+        let query = PFQuery(className: "Message")
+        query.whereKeyExists("createdAt")
+        query.order(byDescending: "createdAt")
+        return query
     }
     
 }
@@ -56,10 +75,11 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Message Cell") ?? UITableViewCell(style: .default, reuseIdentifier: "Message Cell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Message Cell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "Message Cell")
         
         let message = messageObjects[indexPath.row]
-        cell.textLabel?.text = "\(message.createdAt ?? Date(timeIntervalSince1970: 0))"
+        cell.textLabel?.text = message.value(forKey: "message") as? String
+        cell.detailTextLabel?.text = "\(message.createdAt ?? Date(timeIntervalSince1970: 0))"
         
         return cell
     }
