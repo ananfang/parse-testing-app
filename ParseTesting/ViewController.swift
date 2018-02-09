@@ -18,6 +18,8 @@ class ViewController: UIViewController {
     var liveQueryClient: Client?
     var subscription: Subscription<PFObject>?
     
+    let hellos = ["Bonjour", "Hola", "Zdravstvuyte", "你好", "Salve", "こんにちは", "Guten Tag", "Olá", "안녕하세요", "Asalaam alaikum", "Hello"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,12 +59,19 @@ class ViewController: UIViewController {
         return query
     }
     
+    @IBAction func didTapAddMessage(_ sender: UIButton) {
+        let hello = hellos[messageObjects.count % hellos.count]
+        
+        let message = PFObject(className: "Message")
+        message.setValue(hello, forKey: "message")
+        
+        
+        message.saveEventually()
+    }
 }
 
 // MARK: - UITableViewDelegate
-extension ViewController: UITableViewDelegate {
-    
-}
+extension ViewController: UITableViewDelegate {}
 
 // MARK: - UITableViewDataSource
 extension ViewController: UITableViewDataSource {
