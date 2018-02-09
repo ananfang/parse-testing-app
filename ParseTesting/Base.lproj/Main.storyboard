@@ -17,10 +17,35 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdb-le-wW7">
+                                <rect key="frame" x="141" y="621" width="93" height="30"/>
+                                <state key="normal" title="Add Message"/>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TZE-eZ-Cvq">
+                                <rect key="frame" x="0.0" y="64" width="375" height="549"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="6eY-pl-gA6"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="zP1-R3-x7t"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="TZE-eZ-Cvq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="1B2-wo-nNu"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="TZE-eZ-Cvq" secondAttribute="trailing" id="4Ei-uC-Fux"/>
+                            <constraint firstItem="gdb-le-wW7" firstAttribute="top" secondItem="TZE-eZ-Cvq" secondAttribute="bottom" constant="8" symbolic="YES" id="Nri-oL-uJk"/>
+                            <constraint firstItem="TZE-eZ-Cvq" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Vkv-Sy-ROA"/>
+                            <constraint firstItem="gdb-le-wW7" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="iLu-Gj-H7T"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="gdb-le-wW7" secondAttribute="bottom" constant="16" id="nD5-fD-3X6"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="m5M-ha-N8q"/>
+                    <connections>
+                        <outlet property="tableView" destination="TZE-eZ-Cvq" id="Xny-Mh-X1i"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
